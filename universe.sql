@@ -25,6 +25,7 @@ CREATE DATABASE universe WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE 
 
 
 ALTER DATABASE universe OWNER TO freecodecamp;
+
 \connect universe
 
 SET statement_timeout = 0;
@@ -51,7 +52,8 @@ CREATE TABLE public.galaxy (
     name character varying(100) NOT NULL,
     description text,
     is_observable boolean DEFAULT true NOT NULL,
-        image_url character varying(255) NOT NULL
+    distance integer NOT NULL,
+    image_url character varying(255) NOT NULL
 );
 
 
@@ -77,6 +79,9 @@ ALTER TABLE public.galaxy_galaxy_id_seq OWNER TO freecodecamp;
 --
 
 ALTER SEQUENCE public.galaxy_galaxy_id_seq OWNED BY public.galaxy.galaxy_id;
+
+
+--
 -- Name: moon; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
@@ -102,7 +107,9 @@ CREATE SEQUENCE public.moon_moon_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-    ALTER TABLE public.moon_moon_id_seq OWNER TO freecodecamp;
+
+
+ALTER TABLE public.moon_moon_id_seq OWNER TO freecodecamp;
 
 --
 -- Name: moon_moon_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
@@ -129,6 +136,7 @@ ALTER TABLE public.planet OWNER TO freecodecamp;
 --
 -- Name: planet_planet_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
 --
+
 CREATE SEQUENCE public.planet_planet_id_seq
     AS integer
     START WITH 1
@@ -182,13 +190,17 @@ ALTER TABLE public.star_star_id_seq OWNER TO freecodecamp;
 --
 
 ALTER SEQUENCE public.star_star_id_seq OWNED BY public.star.star_id;
+
+
 --
 -- Name: viewer; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
 CREATE TABLE public.viewer (
-    id integer NOT NULL,
+    viewer_id integer NOT NULL,
     name character varying(100) NOT NULL,
+    age integer,
+    times numeric(5,2) DEFAULT 0.0 NOT NULL,
     email character varying(100) NOT NULL
 );
 
@@ -196,23 +208,25 @@ CREATE TABLE public.viewer (
 ALTER TABLE public.viewer OWNER TO freecodecamp;
 
 --
--- Name: viewer_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+-- Name: viewer_viewer_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
 --
 
-CREATE SEQUENCE public.viewer_id_seq
+CREATE SEQUENCE public.viewer_viewer_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-    ALTER TABLE public.viewer_id_seq OWNER TO freecodecamp;
+
+
+ALTER TABLE public.viewer_viewer_id_seq OWNER TO freecodecamp;
 
 --
--- Name: viewer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
+-- Name: viewer_viewer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
 --
 
-ALTER SEQUENCE public.viewer_id_seq OWNED BY public.viewer.id;
+ALTER SEQUENCE public.viewer_viewer_id_seq OWNED BY public.viewer.viewer_id;
 
 
 --
@@ -232,6 +246,7 @@ ALTER TABLE ONLY public.moon ALTER COLUMN moon_id SET DEFAULT nextval('public.mo
 --
 -- Name: planet planet_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
+
 ALTER TABLE ONLY public.planet ALTER COLUMN planet_id SET DEFAULT nextval('public.planet_planet_id_seq'::regclass);
 
 
@@ -243,58 +258,59 @@ ALTER TABLE ONLY public.star ALTER COLUMN star_id SET DEFAULT nextval('public.st
 
 
 --
--- Name: viewer id; Type: DEFAULT; Schema: public; Owner: freecodecamp
+-- Name: viewer viewer_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.viewer ALTER COLUMN id SET DEFAULT nextval('public.viewer_id_seq'::regclass);
+ALTER TABLE ONLY public.viewer ALTER COLUMN viewer_id SET DEFAULT nextval('public.viewer_viewer_id_seq'::regclass);
 
 
 --
 -- Data for Name: galaxy; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.galaxy VALUES (1, 'Milky Way', 'The galaxy that contains our Solar System.', true, 'https://example.com/milkyway.jpg');
-INSERT INTO public.galaxy VALUES (2, 'Andromeda', 'The nearest spiral galaxy to the Milky Way.', true, 'https://example.com/andromeda.jpg');
-INSERT INTO public.galaxy VALUES (3, 'Whirlpool', 'A classic spiral galaxy located in the constellation Canes Venatici.', true, 'https://example.com/whirlpool.jpg');
-INSERT INTO public.galaxy VALUES (4, 'Sombrero', 'A spiral galaxy in the constellation Virgo.', true, 'https://example.com/sombrero.jpg');
-INSERT INTO public.galaxy VALUES (5, 'Triangulum', 'A spiral galaxy located in the constellation Triangulum.', true, 'https://example.com/triangulum.jpg');
-INSERT INTO public.galaxy VALUES (6, 'Cartwheel', 'A ring galaxy located in the constellation Sculptor.', true, 'https://example.com/cartwheel.jpg');
-INSERT INTO public.galaxy VALUES (7, 'Pinwheel', 'A spiral galaxy in the constellation Ursa Major.', true, 'https://example.com/pinwheel.jpg');
-INSERT INTO public.galaxy VALUES (8, 'Centaurus A', 'A giant elliptical galaxy in the constellation Centaurus.', true, 'https://example.com/centaurusa.jpg');
-INSERT INTO public.galaxy VALUES (9, 'Tadpole', 'A peculiar galaxy with a long tail of stars.', true, 'https://example.com/tadpole.jpg');
-INSERT INTO public.galaxy VALUES (10, 'Sunflower', 'A spiral galaxy in the constellation Canes Venatici.', true, 'https://example.com/sunflower.jpg');
+INSERT INTO public.galaxy VALUES (1, 'Milky Way', 'The galaxy that contains our Solar System.', true, 0, 'https://example.com/milky_way.jpg');
+INSERT INTO public.galaxy VALUES (2, 'Andromeda', 'The nearest spiral galaxy to the Milky Way.', true, 2537000, 'https://example.com/andromeda.jpg');
+INSERT INTO public.galaxy VALUES (3, 'Triangulum', 'A spiral galaxy located in the constellation Triangulum.', true, 3000000, 'https://example.com/triangulum.jpg');
+INSERT INTO public.galaxy VALUES (4, 'Whirlpool', 'A classic spiral galaxy in the constellation Canes Venatici.', true, 23000000, 'https://example.com/whirlpool.jpg');
+INSERT INTO public.galaxy VALUES (5, 'Sombrero', 'A spiral galaxy in the constellation Virgo.', true, 28000000, 'https://example.com/sombrero.jpg');
+INSERT INTO public.galaxy VALUES (6, 'Pinwheel', 'A face-on spiral galaxy in the constellation Ursa Major.', true, 21000000, 'https://example.com/pinwheel.jpg');
+INSERT INTO public.galaxy VALUES (7, 'Cartwheel', 'A ring galaxy in the constellation Sculptor.', true, 50000000, 'https://example.com/cartwheel.jpg');
+INSERT INTO public.galaxy VALUES (8, 'Centaurus A', 'A giant elliptical galaxy in the constellation Centaurus.', true, 13000000, 'https://example.com/centaurus_a.jpg');
+INSERT INTO public.galaxy VALUES (9, 'Messier 87', 'A giant elliptical galaxy in the Virgo cluster.', true, 55000000, 'https://example.com/messier_87.jpg');
+INSERT INTO public.galaxy VALUES (10, 'Large Magellanic Cloud', 'A satellite galaxy of the Milky Way.', true, 163000, 'https://example.com/large_magellanic_cloud.jpg');
+INSERT INTO public.galaxy VALUES (11, 'Small Magellanic Cloud', 'Another satellite galaxy of the Milky Way.', true, 200000, 'https://example.com/small_magellanic_cloud.jpg');
 
 
 --
 -- Data for Name: moon; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.moon VALUES (33, 'Luna', 3474.8, true, 1);
-INSERT INTO public.moon VALUES (34, 'Phobos', 22.4, false, 2);
-INSERT INTO public.moon VALUES (35, 'Deimos', 12.4, false, 2);
-INSERT INTO public.moon VALUES (36, 'Io', 3642.6, false, 3);
-INSERT INTO public.moon VALUES (37, 'Callisto', 4820.6, false, 3);
-INSERT INTO public.moon VALUES (38, 'Titania', 1577.8, false, 5);
-INSERT INTO public.moon VALUES (39, 'Oberon', 1522.8, false, 5);
-INSERT INTO public.moon VALUES (40, 'Triton', 2706.8, false, 6);
-INSERT INTO public.moon VALUES (41, 'Charon', 1212, false, 9);
-INSERT INTO public.moon VALUES (42, 'Enceladus', 252.1, false, 4);
-INSERT INTO public.moon VALUES (43, 'Rhea', 1527.6, false, 4);
-INSERT INTO public.moon VALUES (44, 'Iapetus', 1469, false, 4);
-INSERT INTO public.moon VALUES (45, 'Miranda', 471.6, false, 7);
-INSERT INTO public.moon VALUES (46, 'Ariel', 1162.8, false, 7);
-INSERT INTO public.moon VALUES (47, 'Umbriel', 1169.4, false, 7);
-INSERT INTO public.moon VALUES (48, 'Mimas', 396.4, false, 4);
-INSERT INTO public.moon VALUES (49, 'Dione', 1123.8, false, 4);
-INSERT INTO public.moon VALUES (50, 'Tethys', 1062, false, 4);
-INSERT INTO public.moon VALUES (51, 'Phoebe', 218, false, 4);
-INSERT INTO public.moon VALUES (52, 'Hyperion', 270, false, 4);
-INSERT INTO public.moon VALUES (53, 'Janus', 178, false, 4);
-INSERT INTO public.moon VALUES (54, 'Epimetheus', 116, false, 4);
-INSERT INTO public.moon VALUES (55, 'Atlas', 30, false, 4);
-INSERT INTO public.moon VALUES (56, 'Pandora', 81, false, 4);
-INSERT INTO public.moon VALUES (57, 'Prometheus', 86, false, 4);
-INSERT INTO public.moon VALUES (58, 'Pan', 28, false, 4);
+INSERT INTO public.moon VALUES (1, 'Luna', 3474.8, true, 1);
+INSERT INTO public.moon VALUES (2, 'Phobos', 22.4, false, 2);
+INSERT INTO public.moon VALUES (3, 'Deimos', 12.4, false, 2);
+INSERT INTO public.moon VALUES (4, 'Io', 3642.6, false, 3);
+INSERT INTO public.moon VALUES (5, 'Callisto', 4820.6, false, 3);
+INSERT INTO public.moon VALUES (6, 'Titania', 1577.8, false, 5);
+INSERT INTO public.moon VALUES (7, 'Oberon', 1522.8, false, 5);
+INSERT INTO public.moon VALUES (8, 'Triton', 2706.8, false, 6);
+INSERT INTO public.moon VALUES (9, 'Charon', 1212, false, 9);
+INSERT INTO public.moon VALUES (10, 'Enceladus', 252.1, false, 4);
+INSERT INTO public.moon VALUES (11, 'Rhea', 1527.6, false, 4);
+INSERT INTO public.moon VALUES (12, 'Iapetus', 1469, false, 4);
+INSERT INTO public.moon VALUES (13, 'Miranda', 471.6, false, 7);
+INSERT INTO public.moon VALUES (14, 'Ariel', 1162.8, false, 7);
+INSERT INTO public.moon VALUES (15, 'Umbriel', 1169.4, false, 7);
+INSERT INTO public.moon VALUES (16, 'Mimas', 396.4, false, 4);
+INSERT INTO public.moon VALUES (17, 'Dione', 1123.8, false, 4);
+INSERT INTO public.moon VALUES (18, 'Tethys', 1062, false, 4);
+INSERT INTO public.moon VALUES (19, 'Phoebe', 218, false, 4);
+INSERT INTO public.moon VALUES (20, 'Hyperion', 270, false, 4);
+INSERT INTO public.moon VALUES (21, 'Janus', 178, false, 4);
+INSERT INTO public.moon VALUES (22, 'Epimetheus', 116, false, 4);
+INSERT INTO public.moon VALUES (23, 'Atlas', 30, false, 4);
+INSERT INTO public.moon VALUES (24, 'Pandora', 81, false, 4);
+INSERT INTO public.moon VALUES (25, 'Prometheus', 86, false, 4);
+INSERT INTO public.moon VALUES (26, 'Pan', 28, false, 4);
 
 
 --
@@ -331,33 +347,34 @@ INSERT INTO public.star VALUES (6, 'Alpha Centauri B', 'Main Sequence', 0.9, 2);
 -- Data for Name: viewer; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.viewer VALUES (1, 'Alice Johnson', 'alice.johnson@example.com');
-INSERT INTO public.viewer VALUES (2, 'Bob Smith', 'bob.smith@example.com');
-INSERT INTO public.viewer VALUES (3, 'Charlie Brown', 'charlie.brown@example.com');
-INSERT INTO public.viewer VALUES (4, 'David Wilson', 'david.wilson@example.com');
-INSERT INTO public.viewer VALUES (5, 'Eva Green', 'eva.green@example.com');
-INSERT INTO public.viewer VALUES (6, 'Frank White', 'frank.white@example.com');
-INSERT INTO public.viewer VALUES (7, 'Grace Lee', 'grace.lee@example.com');
-INSERT INTO public.viewer VALUES (8, 'Hannah Adams', 'hannah.adams@example.com');
+INSERT INTO public.viewer VALUES (1, 'Alice Johnson', 28, 5.00, 'alice.johnson@example.com');
+INSERT INTO public.viewer VALUES (2, 'Bob Smith', 34, 10.00, 'bob.smith@example.com');
+INSERT INTO public.viewer VALUES (3, 'Charlie Brown', 22, 3.50, 'charlie.brown@example.com');
+INSERT INTO public.viewer VALUES (4, 'David Wilson', 45, 8.00, 'david.wilson@example.com');
+INSERT INTO public.viewer VALUES (5, 'Eva Green', 30, 6.00, 'eva.green@example.com');
+INSERT INTO public.viewer VALUES (6, 'Frank White', 50, 12.00, 'frank.white@example.com');
+INSERT INTO public.viewer VALUES (7, 'Grace Lee', 27, 4.00, 'grace.lee@example.com');
+INSERT INTO public.viewer VALUES (8, 'Hannah Adams', 31, 7.00, 'hannah.adams@example.com');
 
 
 --
 -- Name: galaxy_galaxy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 10, true);
+SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 11, true);
 
 
 --
 -- Name: moon_moon_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.moon_moon_id_seq', 58, true);
+SELECT pg_catalog.setval('public.moon_moon_id_seq', 26, true);
 
 
 --
 -- Name: planet_planet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
+
 SELECT pg_catalog.setval('public.planet_planet_id_seq', 12, true);
 
 
@@ -369,10 +386,10 @@ SELECT pg_catalog.setval('public.star_star_id_seq', 6, true);
 
 
 --
--- Name: viewer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+-- Name: viewer_viewer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.viewer_id_seq', 8, true);
+SELECT pg_catalog.setval('public.viewer_viewer_id_seq', 8, true);
 
 
 --
@@ -412,7 +429,7 @@ ALTER TABLE ONLY public.moon
 --
 
 ALTER TABLE ONLY public.planet
- ADD CONSTRAINT planet_name_key UNIQUE (name);
+    ADD CONSTRAINT planet_name_key UNIQUE (name);
 
 
 --
@@ -437,7 +454,9 @@ ALTER TABLE ONLY public.star
 
 ALTER TABLE ONLY public.star
     ADD CONSTRAINT star_pkey PRIMARY KEY (star_id);
-    --
+
+
+--
 -- Name: viewer viewer_email_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
@@ -450,7 +469,7 @@ ALTER TABLE ONLY public.viewer
 --
 
 ALTER TABLE ONLY public.viewer
-    ADD CONSTRAINT viewer_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT viewer_pkey PRIMARY KEY (viewer_id);
 
 
 --
@@ -464,6 +483,7 @@ ALTER TABLE ONLY public.moon
 --
 -- Name: planet planet_star_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
 --
+
 ALTER TABLE ONLY public.planet
     ADD CONSTRAINT planet_star_id_fkey FOREIGN KEY (star_id) REFERENCES public.star(star_id);
 
@@ -479,3 +499,4 @@ ALTER TABLE ONLY public.star
 --
 -- PostgreSQL database dump complete
 --
+
