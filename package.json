@@ -1,5 +1,6 @@
 {
   "name": "projects",
+  "author": "inbus kuo",
   "version": "1.0.0",
   "main": "index.js",
   "directories": {
@@ -9,7 +10,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "inbus kuo",
   "license": "ISC",
   "description": ""
 }
